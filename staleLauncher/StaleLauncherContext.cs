@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +13,7 @@ namespace staleLauncher
     class StaleLauncherContext : ApplicationContext
     {
         public static string clientEntryPath;
+        public static string clientEXEName;
         public static string clientLocale;
         public static NotifyIcon _trayIcon;
         public static Form _serverControl = null;
@@ -139,17 +140,12 @@ namespace staleLauncher
             Process[] processes = Process.GetProcessesByName("wow");
 
             _wowClient.WorkingDirectory = clientEntryPath;
-            _wowClient.FileName = clientEntryPath + "\\" + "Wow.exe";
+            _wowClient.FileName = clientEntryPath + "\\" + clientEXEName + ".exe";
 
-            if (processes.Length == 0)
-            {
-                if (Properties.Settings.Default.deleteClientCache && Directory.Exists(clientEntryPath + "\\" + "cache"))
-                    Directory.Delete(clientEntryPath + "\\" + "cache", true);
+            if (Properties.Settings.Default.deleteClientCache && Directory.Exists(clientEntryPath + "\\" + "cache"))
+                Directory.Delete(clientEntryPath + "\\" + "cache", true);
 
-                process = Process.Start(_wowClient);
-            }
-            else
-                MessageBox.Show("Wow.exe already running.", "Error");
+            process = Process.Start(_wowClient);
         }
 
 
@@ -213,6 +209,9 @@ namespace staleLauncher
                                             {
                                                 case "path":
                                                     clientEntryPath = attr.Value;
+                                                    break;
+                                                case "name":
+                                                    clientEXEName = attr.Value;
                                                     break;
                                                 case "locale":
                                                     clientLocale = attr.Value;
